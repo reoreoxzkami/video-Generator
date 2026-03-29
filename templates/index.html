@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI動画生成アプリ</title>
+    <style>
+      body { font-family: sans-serif; margin: 2rem; max-width: 720px; }
+      textarea, input, button { width: 100%; margin-top: 0.6rem; padding: 0.7rem; }
+      button { cursor: pointer; }
+      .status { margin-top: 1rem; }
+      .download { margin-top: 1rem; display: none; }
+    </style>
+  </head>
+  <body>
+    <h1>AI動画生成アプリ</h1>
+    <p>テキストから短い動画を生成します。</p>
+
+    <form id="video-form">
+      <label>プロンプト</label>
+      <textarea name="prompt" rows="4" required>東京の夜景をドローンで撮影したようなシネマティック映像</textarea>
+
+      <label>シーン数（2〜8）</label>
+      <input type="number" name="scene_count" value="4" min="2" max="8" />
+
+      <label>1シーン秒数（0.8〜4.0）</label>
+      <input type="number" name="seconds_per_scene" value="1.5" step="0.1" min="0.8" max="4.0" />
+
+      <button type="submit">動画を生成</button>
+    </form>
+
+    <div class="status" id="status"></div>
+    <a class="download" id="download" href="#">動画をダウンロード</a>
+
+    <script>
+      const form = document.getElementById('video-form');
+      const statusEl = document.getElementById('status');
+      const downloadEl = document.getElementById('download');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        statusEl.textContent = '生成中...（数十秒かかる場合があります）';
+        downloadEl.style.display = 'none';
+
+        const data = new FormData(form);
+        try {
+          const res = await fetch('/generate', { method: 'POST', body: data });
+          if (!res.ok) {
+            throw new Error('生成に失敗しました');
+          }
+          const json = await res.json();
+          statusEl.textContent = json.message;
+          downloadEl.href = json.file;
+          downloadEl.style.display = 'inline-block';
+          downloadEl.textContent = '生成された動画をダウンロード';
+        } catch (err) {
+          statusEl.textContent = 'エラー: ' + err.message;
+        }
+      });
+    </script>
+  </body>
+</html>
