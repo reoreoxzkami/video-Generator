@@ -9,14 +9,40 @@
 - ブラウザから動画生成・プレビュー再生・ダウンロード
 
 ## セットアップ
+
+### Linux (bash / zsh)
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
+uvicorn main:app --reload
 ```
 
-## 起動
+### macOS (bash / zsh)
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+### Windows (PowerShell)
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+### Windows (cmd.exe)
+```bat
+py -3 -m venv .venv
+.venv\Scripts\activate.bat
+python -m pip install --upgrade pip
+pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
